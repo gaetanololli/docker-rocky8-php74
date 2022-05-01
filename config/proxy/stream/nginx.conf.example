@@ -1,0 +1,8 @@
+upstream database {
+    server database:3306;
+}
+
+server {
+    listen 3306;
+    proxy_pass database;
+}

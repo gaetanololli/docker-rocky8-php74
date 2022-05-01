@@ -1,0 +1,13 @@
+<VirtualHost *:80>
+    ServerName nomedelsito.local
+    DocumentRoot "/var/www/nomedelsito"
+    ErrorLog "/etc/httpd/logs/error.log"
+    CustomLog "/etc/httpd/logs/access.log" combined
+    <Directory "/var/www/nomedelsito">
+        DirectoryIndex index.php
+        Options Indexes FollowSymLinks Multiviews
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
