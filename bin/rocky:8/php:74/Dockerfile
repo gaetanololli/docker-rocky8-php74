@@ -5,26 +5,37 @@ RUN dnf -y update && \
     dnf upgrade -y
 
 # Install useful tools and install important libaries
+RUN dnf install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+RUN dnf -y install dnf-plugins-core
+RUN dnf config-manager --set-enabled powertools
 RUN dnf -y update && dnf -y install wget nano dialog sqlite-libs \
-     mysql zlib libzip libicu git curl libcurl openssl zip make \
-     gcc gcc-c++ autoconf automake vim libzip mod_fcgid mod_ssl --skip-broken
+    mysql zlib libzip libicu git curl libcurl openssl zip make \
+    gcc gcc-c++ autoconf automake vim libzip mod_fcgid mod_ssl \
+    tar bzip kernel-devel-$(uname -r) kernel-headers perl \
+    elfutils-libelf-devel --skip-broken
+
 
 # Install and start Apache Web Server
-RUN dnf -y install httpd
+RUN dnf -y install httpd httpd-tools
 RUN sed -i "s/#ServerName /ServerName www.example.com:80/" "/etc/httpd/conf/httpd.conf"
 RUN systemctl enable httpd
 
 # Install PHP and its extensions
+RUN dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
 RUN dnf -y module reset php
-RUN dnf -y module install php:7.4
-RUN dnf -y update && dnf -y install php-common php-curl \
+RUN dnf -y module enable php:remi-7.4
+RUN dnf -y install php php-common php-curl \
     php-pdo php-mysqlnd php-json php-mbstring php-soap php-xml php-gd \
-    php-bcmath php-cli php-pear php-devel php-intl
+    php-bcmath php-cli php-pear php-devel php-intl php-openssl php-pdo_mysql \
+    php-rar php-pecl-zip php-imap php-soap php-fpm
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN sed -i "s/listen.acl_users/;listen.acl_users/" "/etc/php-fpm.d/www.conf"
 RUN sed -i "s/;listen.owner = nobody/listen.owner = apache/g" "/etc/php-fpm.d/www.conf"
 RUN sed -i "s/;listen.group = nobody/listen.group = apache/g" "/etc/php-fpm.d/www.conf"
 RUN systemctl enable php-fpm
+
+# Set TimeZone
+# RUN timedatectl set-timezone Europe/Rome
 
 # Install xdebug
 RUN pecl install xdebug-2.8.0
