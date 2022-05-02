@@ -12,7 +12,7 @@ server {
     listen 80;
 
     #TODO: Cambiare il nome del sito per accedere al vh
-    server_name nomedelsito.local;
+    server_name .nomedelsito.local;
 
     location / {
         proxy_pass         http://webserver;
