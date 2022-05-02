@@ -46,7 +46,7 @@ RUN PHPINIFILE=`find /etc -name php.ini -print` && \
 # Install imagick
 RUN dnf -y update && \
     dnf -y install epel-release && \
-    dnf -y install ImageMagick ImageMagick-devel --skip-broken
+    dnf -y install ImageMagick ImageMagick-devel --skip-broken --allowerasing
 
 EXPOSE 80
 ENTRYPOINT ["/usr/sbin/init"]
