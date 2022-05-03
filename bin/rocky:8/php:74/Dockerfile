@@ -24,10 +24,7 @@ RUN systemctl enable httpd
 RUN dnf install -y https://rpms.remirepo.net/enterprise/remi-release-8.rpm
 RUN dnf -y module reset php
 RUN dnf -y module enable php:remi-7.4
-RUN dnf -y install php php-common php-curl \
-    php-pdo php-mysqlnd php-json php-mbstring php-soap php-xml php-gd \
-    php-bcmath php-cli php-pear php-devel php-intl php-openssl php-pdo_mysql \
-    php-rar php-pecl-zip php-imap php-soap php-fpm
+RUN dnf -y install php php-{common,curl,pdo,mysqlnd,json,mbstring,soap,xml,gd,bcmath,cli,pear,devel,intl,openssl,pdo_mysql,rar,pecl-zip,imap,cli,fpm} --allowerasing
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 RUN sed -i "s/listen.acl_users/;listen.acl_users/" "/etc/php-fpm.d/www.conf"
 RUN sed -i "s/;listen.owner = nobody/listen.owner = apache/g" "/etc/php-fpm.d/www.conf"
